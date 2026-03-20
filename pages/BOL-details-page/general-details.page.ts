@@ -162,7 +162,7 @@ export class GeneralDetails {
     (await this.siteName.fill(siteName),
       await this.page.getByRole("option", { name: `${siteName}`, exact: true }).click());
     await expect(
-      this.page.locator(`input[value='${ENV.siteName}']`).first()
+      this.page.locator(`input[value='${siteName}']`).first()
     ).toBeVisible();
   }
 }

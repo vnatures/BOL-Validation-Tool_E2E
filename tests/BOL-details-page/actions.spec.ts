@@ -78,7 +78,7 @@ test.describe.skip("Actions on BOLs", () => {
     await pendingValidationBOL.tableRow.click();
     await page.waitForTimeout(2000);
     await expect(page).toHaveScreenshot("before-save.png", {
-      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
+      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate, generalDetails.lastUpdatedBy],
       maskColor: "#e7c742",
     });
     // Clear fields
@@ -94,7 +94,7 @@ test.describe.skip("Actions on BOLs", () => {
     await generalDetails.sequence1Input.click();
     await generalDetails.input.fill("");
     await expect(page).toHaveScreenshot("empty-fields-before-save.png", {
-      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
+      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate, generalDetails.lastUpdatedBy],
       maskColor: "#e7c742",
     });
     // wait for PUT request triggered by Save btn
@@ -121,7 +121,7 @@ test.describe.skip("Actions on BOLs", () => {
     await pendingValidationBOL.tableRow.click();
     await page.waitForTimeout(3000);
     await expect(page).toHaveScreenshot("empty-fields-after-save.png", {
-      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
+      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate, generalDetails.lastUpdatedBy],
       maskColor: "#e7c742",
     });
   });
@@ -154,7 +154,7 @@ test.describe.skip("Actions on BOLs", () => {
       "illegible-bol-msg.png",
     );
     await expect(page).toHaveScreenshot("illegible-BOL-status.png", {
-      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
+      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate, generalDetails.lastUpdatedBy],
       maskColor: "#e7c742",
     });
   });
@@ -188,7 +188,7 @@ test.describe.skip("Actions on BOLs", () => {
       "illegible-bol-msg.png",
     );
     await expect(page).toHaveScreenshot("illegible-BOL-status2.png", {
-      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
+      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate, generalDetails.lastUpdatedBy],
       maskColor: "#e7c742",
     });
   });
@@ -220,7 +220,7 @@ test.describe.skip("Actions on BOLs", () => {
       "validated-bol-msg.png",
     );
     await expect(page).toHaveScreenshot("validated-BOL-status.png", {
-      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
+      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate, generalDetails.lastUpdatedBy],
       maskColor: "#e7c742",
     });
   });
@@ -245,7 +245,7 @@ test.describe.skip("Actions on BOLs", () => {
     );
     await generalDetails.closeBtn.click();
     await expect(page).toHaveScreenshot("status-remains-pending.png", {
-      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
+      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate, generalDetails.lastUpdatedBy],
       maskColor: "#e7c742",
     });
   });
@@ -273,7 +273,7 @@ test.describe.skip("Actions on BOLs", () => {
     await generalDetails.yesCommitBtn.click();
     await page.waitForTimeout(1000);
     await expect(page).toHaveScreenshot("illegible-BOL3.png", {
-      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
+      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate, generalDetails.lastUpdatedBy],
       maskColor: "#e7c742",
     });
     await generalDetails.editBtn.click();
@@ -282,7 +282,7 @@ test.describe.skip("Actions on BOLs", () => {
     await generalDetails.yesCommitBtn.click();
     await page.waitForTimeout(1000);
     await expect(page).toHaveScreenshot("validated-BOL3.png", {
-      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
+      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate, generalDetails.lastUpdatedBy],
       maskColor: "#e7c742",
     });
   });
@@ -309,7 +309,7 @@ test.describe.skip("Actions on BOLs", () => {
     await generalDetails.yesCommitBtn.click();
     await page.waitForTimeout(2000);
     await expect(page).toHaveScreenshot("validated-BOL4.png", {
-      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
+      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate, generalDetails.lastUpdatedBy],
       maskColor: "#e7c742",
     });
     await generalDetails.editBtn.click();
@@ -318,7 +318,7 @@ test.describe.skip("Actions on BOLs", () => {
     await generalDetails.yesCommitBtn.click();
     await page.waitForTimeout(2000);
     await expect(page).toHaveScreenshot("illegible-BOL4.png", {
-      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
+      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate, generalDetails.lastUpdatedBy],
       maskColor: "#e7c742",
     });
   });
