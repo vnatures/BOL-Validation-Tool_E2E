@@ -1,13 +1,14 @@
 import { test, expect } from "../../fixtures/user.fixture";
+import { ENV } from "../../config/env";
 
 test.describe("General details of uploaded BOLs", () => {
   // Snapshots are based on BOL file from path BOLs/1page/ohio-00004.png
   // please make sure that the latest uploaded BOL is specifically that one
   // Note: different people use dev env so the state is not always the same
-  test.use({ user: "maria" });
+  test.use({ user: "testUser" });
   test.beforeEach(async ({ page, generalDetails, table }) => {
     await page.goto("");
-    await generalDetails.selectSite("QA Test Site");
+    await generalDetails.selectSite(ENV.siteName);
     await table.pendingValidationBOL.click();
     await page.waitForTimeout(2000);
   });
@@ -122,7 +123,7 @@ test.describe("General details of uploaded BOLs", () => {
     generalDetails,
     page,
   }) => {
-    await page.goto("/bol-validation?bolId=1517&siteId=10000307");
+    await page.goto(`/bol-validation?bolId=${ENV.pendingBolId}&siteId=${ENV.siteId}`);
     // user can toggle between Valid/Illegible when Fabricator and Load data is available
     await generalDetails.validBtn.nth(1).click();
     await expect(generalDetails.headerContainer).toHaveScreenshot(
@@ -208,27 +209,27 @@ test.describe("General details of uploaded BOLs", () => {
 
   //add new no data BOL id here
   test("Validate No data scan", async ({ page }) => {
-    await page.goto("/bol-validation?bolId=1513&siteId=10000307");
+    await page.goto(`/bol-validation?bolId=${ENV.emptyBolId}&siteId=${ENV.siteId}`);
     await page.waitForTimeout(2000);
     await expect(page).toHaveScreenshot("no-data-BOL.png");
     // no data BOLs have empty state in table, they can manually add data
   });
 
   test("Validate Note", async ({ generalDetails, page }) => {
-    await page.goto("/bol-validation?bolId=1517&siteId=10000307");
+    await page.goto(`/bol-validation?bolId=${ENV.pendingBolId}&siteId=${ENV.siteId}`);
     await expect(generalDetails.noteContainer).toHaveScreenshot(
       "note-container.png",
     );
     await generalDetails.noteContainer.click();
     await expect(generalDetails.noteDialog).toBeVisible();
     await expect(page).toHaveScreenshot("open-note-dialog.png", {
-      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
+      mask: [generalDetails.bolID, generalDetails.lastUpdatedDate, generalDetails.lastUpdatedBy],
       maskColor: "#e7c742",
     });
   });
 
   test("Empty state - non existing BOL", async ({ page }) => {
-    await page.goto("/bol-validation?bolId=677&siteId=10000307");
+    await page.goto(`/bol-validation?bolId=${ENV.nonexistingBolId}&siteId=${ENV.siteId}`);
     await page.waitForTimeout(2000);
     await expect(page).toHaveScreenshot("empty-state_non-existing-BOL.png");
   });

@@ -1,5 +1,6 @@
 import { test, expect } from "../../fixtures/user.fixture";
 import { uploadDocumentImages, deleteBolDocument } from "../../util/helper";
+import { ENV } from "../../config/env";
 /**
  * This file:
  * - Uploads a fresh BOL via API before each test (to guarantee a known starting state).
@@ -10,9 +11,9 @@ import { uploadDocumentImages, deleteBolDocument } from "../../util/helper";
  * - The entire suite is intentionally skipped via `test.describe.skip(...)` so it only runs on demand
  *   (e.g., debugging, targeted regression), not on every test run.
  *
- * Test data used:
- * - A site called “QA Test Site” that corresponds to `siteId = 10000307`.
- * - The uploader user `uploadedBy = 3226` - change to your userID. - always use one user to avoid failing screenshots because of different username captured.
+ * Test data used (note that this may vary based on .env):
+ * - Site data (SITE_ID and SITE_NAME in .env file) must be cirrectly configured.
+ * - The uploader user `uploadedBy - always use one user to avoid failing screenshots because of different username captured.
  * - The test images exist at BOLs folder in the root of the project.
  *
  * Visual regression:
@@ -21,14 +22,14 @@ import { uploadDocumentImages, deleteBolDocument } from "../../util/helper";
  * - Tests tend to be flaky because of snapshots - optimize the usage.
  */
 test.describe.skip("Actions on BOLs", () => {
-  test.use({ user: "maria" });
+  test.use({ user: "testUser" });
   test.beforeEach(
     "Upload new BOL, navigate to it and make actions",
     async ({ request }) => {
       const result = await uploadDocumentImages({
         request,
-        siteId: 10000307,
-        uploadedBy: 3226,
+        siteId: ENV.siteId,
+        uploadedBy: ENV.uploadedBy,
         filePaths: ["BOLs/1page/ohio-00004.png"],
         note: "Automated upload of 1 BOL",
       });
@@ -39,7 +40,7 @@ test.describe.skip("Actions on BOLs", () => {
     "Delete BOL after test finishes",
     async ({ page, request, generalDetails }) => {
       await page.goto("");
-      await generalDetails.selectSite("QA Test Site");
+      await generalDetails.selectSite(ENV.siteName);
       await page.waitForTimeout(1000);
       await generalDetails.removeStatusFilter.click();
       await page.waitForTimeout(1000);
@@ -52,9 +53,9 @@ test.describe.skip("Actions on BOLs", () => {
         .innerText();
       const result = await deleteBolDocument(
         request,
-        10000307,
+        ENV.siteId,
         bolId.trim(),
-        3226,
+        ENV.uploadedBy,
       );
       expect(result.status).toBe(201);
       expect(result.body).toBe("");
@@ -68,7 +69,7 @@ test.describe.skip("Actions on BOLs", () => {
   }) => {
     // Navigate to newest BOL
     await page.goto("");
-    await generalDetails.selectSite("QA Test Site");
+    await generalDetails.selectSite(ENV.siteName);
     await generalDetails.removeStatusFilter.click();
     await page.waitForTimeout(1000);
     await generalDetails.sortBolId.click();
@@ -92,7 +93,7 @@ test.describe.skip("Actions on BOLs", () => {
     await generalDetails.input.fill("");
     await generalDetails.sequence1Input.click();
     await generalDetails.input.fill("");
-    await expect(page).toHaveScreenshot("empty-fields.png", {
+    await expect(page).toHaveScreenshot("empty-fields-before-save.png", {
       mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
       maskColor: "#e7c742",
     });
@@ -100,7 +101,7 @@ test.describe.skip("Actions on BOLs", () => {
     const responsePromise = page.waitForResponse((response) => {
       return (
         response.request().method() === "PUT" &&
-        response.url().includes("api/v1/sites/10000307/documents")
+        response.url().includes(`api/v1/sites/${ENV.siteId}/documents`)
       );
     });
     // trigger the PUT request
@@ -111,15 +112,15 @@ test.describe.skip("Actions on BOLs", () => {
 
     // refresh page and make sure data is saved
     await page.goto("");
-    await generalDetails.selectSite("QA Test Site");
+    await generalDetails.selectSite(ENV.siteName);
     await generalDetails.removeStatusFilter.click();
     await page.waitForTimeout(1000);
     await generalDetails.sortBolId.click();
     await page.waitForTimeout(500);
     await generalDetails.sortBolId.click();
     await pendingValidationBOL.tableRow.click();
-    await page.waitForTimeout(2000);
-    await expect(page).toHaveScreenshot("empty-fields.png", {
+    await page.waitForTimeout(3000);
+    await expect(page).toHaveScreenshot("empty-fields-after-save.png", {
       mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
       maskColor: "#e7c742",
     });
@@ -131,7 +132,7 @@ test.describe.skip("Actions on BOLs", () => {
     pendingValidationBOL,
   }) => {
     await page.goto("");
-    await generalDetails.selectSite("QA Test Site");
+    await generalDetails.selectSite(ENV.siteName);
     await generalDetails.removeStatusFilter.click();
     await generalDetails.sortBolId.click();
     await page.waitForTimeout(500);
@@ -164,7 +165,7 @@ test.describe.skip("Actions on BOLs", () => {
     pendingValidationBOL,
   }) => {
     await page.goto("");
-    await generalDetails.selectSite("QA Test Site");
+    await generalDetails.selectSite(ENV.siteName);
     await generalDetails.removeStatusFilter.click();
     await page.waitForTimeout(1000);
     await generalDetails.sortBolId.click();
@@ -198,7 +199,7 @@ test.describe.skip("Actions on BOLs", () => {
     pendingValidationBOL,
   }) => {
     await page.goto("");
-    await generalDetails.selectSite("QA Test Site");
+    await generalDetails.selectSite(ENV.siteName);
     await generalDetails.removeStatusFilter.click();
     await page.waitForTimeout(1000);
     await generalDetails.sortBolId.click();
@@ -230,7 +231,7 @@ test.describe.skip("Actions on BOLs", () => {
     pendingValidationBOL,
   }) => {
     await page.goto("");
-    await generalDetails.selectSite("QA Test Site");
+    await generalDetails.selectSite(ENV.siteName);
     await generalDetails.removeStatusFilter.click();
     await page.waitForTimeout(1000);
     await generalDetails.sortBolId.click();
@@ -255,7 +256,7 @@ test.describe.skip("Actions on BOLs", () => {
     pendingValidationBOL,
   }) => {
     await page.goto("");
-    await generalDetails.selectSite("QA Test Site");
+    await generalDetails.selectSite(ENV.siteName);
     await generalDetails.removeStatusFilter.click();
     await page.waitForTimeout(1000);
     await generalDetails.sortBolId.click();
@@ -292,7 +293,7 @@ test.describe.skip("Actions on BOLs", () => {
     pendingValidationBOL,
   }) => {
     await page.goto("");
-    await generalDetails.selectSite("QA Test Site");
+    await generalDetails.selectSite(ENV.siteName);
     await generalDetails.removeStatusFilter.click();
     await page.waitForTimeout(1000);
     await generalDetails.sortBolId.click();
@@ -306,7 +307,7 @@ test.describe.skip("Actions on BOLs", () => {
     }
     await generalDetails.commitBtn.click();
     await generalDetails.yesCommitBtn.click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
     await expect(page).toHaveScreenshot("validated-BOL4.png", {
       mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
       maskColor: "#e7c742",
@@ -315,7 +316,7 @@ test.describe.skip("Actions on BOLs", () => {
     await generalDetails.illegibleBtn.nth(1).click();
     await generalDetails.commitBtn.click();
     await generalDetails.yesCommitBtn.click();
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
     await expect(page).toHaveScreenshot("illegible-BOL4.png", {
       mask: [generalDetails.bolID, generalDetails.lastUpdatedDate],
       maskColor: "#e7c742",

@@ -7,6 +7,7 @@ export async function resetImageOrientation(
 ) {
   for (let i = 0; i < 4; i++) {
     try {
+      await page.waitForTimeout(2000);
       await expect(generalDetails.imageContainer).toHaveScreenshot(
         "non-rotated-image.png",
         {
@@ -17,7 +18,7 @@ export async function resetImageOrientation(
       return;
     } catch {
       await generalDetails.rotateBtn.click();
-      await page.waitForTimeout(2000);
+      await page.waitForTimeout(1000);
     }
   }
 

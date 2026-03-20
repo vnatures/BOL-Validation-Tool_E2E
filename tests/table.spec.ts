@@ -1,7 +1,7 @@
 import { test, expect } from "../fixtures/user.fixture";
 // TBD - create a test plan with test cases that will be automated
 test.describe("BOL Table", () => {
-  test.use({ user: "maria" });
+  test.use({ user: "testUser" });
   test.beforeEach(async ({ page }) => {
     await page.goto("");
   });

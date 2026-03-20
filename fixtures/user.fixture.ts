@@ -1,6 +1,6 @@
 import { test as base } from "../fixtures/base.fixture";
 
-export type User = "maria";
+export type User = "testUser";
 
 export const test = base.extend<{ user: User | undefined }>({
   user: [undefined, { option: true }],

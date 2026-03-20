@@ -1,6 +1,6 @@
 import { test, expect } from "../fixtures/user.fixture";
 import { uploadDocumentImages, deleteBolDocument } from "../util/helper";
-
+import { ENV } from "../config/env";
 /**
  * These tests are intentionally skipped to avoid triggering API calls on every test run.
  *
@@ -24,7 +24,7 @@ import { uploadDocumentImages, deleteBolDocument } from "../util/helper";
  * There is also swagger that can execute exact BOL deletion/upload
  */
 test.describe.skip("Upload and delete BOLs", () => {
-  test.use({ user: "maria" });
+  test.use({ user: "testUser" });
   test.beforeEach(async ({ page }) => {
     await page.goto("");
   });
@@ -32,8 +32,8 @@ test.describe.skip("Upload and delete BOLs", () => {
   test("Upload one BOL image", async ({ request }) => {
     const result = await uploadDocumentImages({
       request,
-      siteId: 10000307,
-      uploadedBy: 3226,
+      siteId: ENV.siteId,
+      uploadedBy: ENV.uploadedBy,
       filePaths: ["BOLs/1page/ohio-00004.png"],
       note: "Automated upload of 1 BOL",
     });
@@ -43,8 +43,8 @@ test.describe.skip("Upload and delete BOLs", () => {
   test("Upload 3 BOL images", async ({ request }) => {
     const result = await uploadDocumentImages({
       request,
-      siteId: 10000307,
-      uploadedBy: 3226,
+      siteId: ENV.siteId,
+      uploadedBy: ENV.uploadedBy,
       filePaths: [
         "BOLs/3pages/ohio-00003-1.png",
         "BOLs/3pages/ohio-00003-2.png",
@@ -58,8 +58,8 @@ test.describe.skip("Upload and delete BOLs", () => {
   test("Upload 10 BOL images", async ({ request }) => {
     const result = await uploadDocumentImages({
       request,
-      siteId: 10000307,
-      uploadedBy: 3226,
+      siteId: ENV.siteId,
+      uploadedBy: ENV.uploadedBy,
       filePaths: [
         "BOLs/3pages/ohio-00003-1.png",
         "BOLs/3pages/ohio-00003-2.png",
@@ -80,8 +80,8 @@ test.describe.skip("Upload and delete BOLs", () => {
   test("Upload no data BOL image", async ({ request }) => {
     const result = await uploadDocumentImages({
       request,
-      siteId: 10000307,
-      uploadedBy: 3226,
+      siteId: ENV.siteId,
+      uploadedBy: ENV.uploadedBy,
       filePaths: ["BOLs/noData/no-data-image.png"],
       note: "Automated upload of no data BOL",
     });
@@ -96,7 +96,7 @@ test.describe.skip("Upload and delete BOLs", () => {
     let i = 1;
     for (i; i <= 4; i++) {
       await page.goto("");
-      await generalDetails.selectSite("QA Test Site");
+      await generalDetails.selectSite(ENV.siteName);
       await generalDetails.removeStatusFilter.click();
       await generalDetails.sortBolId.dblclick();
       const bolId = await page
@@ -105,9 +105,9 @@ test.describe.skip("Upload and delete BOLs", () => {
         .innerText();
       const result = await deleteBolDocument(
         request,
-        10000307,
+        ENV.siteId,
         bolId.trim(),
-        3226,
+        ENV.uploadedBy,
       );
       expect(result.status).toBe(201);
       expect(result.body).toBe("");

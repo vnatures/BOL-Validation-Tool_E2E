@@ -1,11 +1,12 @@
 import { test, expect } from "../../fixtures/user.fixture";
 import { resetImageOrientation } from "../../util/ui-helper";
+import { ENV } from "../../config/env";
 
 test.describe("Details page - image features", () => {
-  test.use({ user: "maria" });
+  test.use({ user: "testUser" });
   test.beforeEach(async ({ page, generalDetails, table }) => {
     await page.goto("");
-    await generalDetails.selectSite("QA Test Site");
+    await generalDetails.selectSite(ENV.siteName);
     await table.pendingValidationBOL.click();
     await page.waitForTimeout(2000);
   });

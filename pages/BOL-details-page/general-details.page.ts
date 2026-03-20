@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from "@playwright/test";
+import { ENV } from "../../config/env";
 
 export class GeneralDetails {
   readonly page: Page;
@@ -56,6 +57,7 @@ export class GeneralDetails {
   // elements for masking
   readonly bolID: Locator;
   readonly lastUpdatedDate: Locator;
+  readonly lastUpdatedBy: Locator;
   //action buttons
   readonly saveBtn: Locator;
   readonly commitBtn: Locator;
@@ -145,7 +147,8 @@ export class GeneralDetails {
     this.noteDialog = page.locator('div[role="dialog"]');
     // elements for masking
     this.bolID = page.locator("h3.mantine-Title-root");
-    this.lastUpdatedDate = page.locator("p.mantine-Text-root").nth(1);
+    this.lastUpdatedDate = page.locator('p:has-text("Last updated at:") + p');
+    this.lastUpdatedBy = page.locator('p:has-text("by:") + p');
     // action buttons
     this.saveBtn = page.getByRole("button", { name: "Save" });
     this.commitBtn = page.getByRole("button", { name: "Commit" });
@@ -157,9 +160,9 @@ export class GeneralDetails {
   // make sure to provide exact string to this method
   async selectSite(siteName: any) {
     (await this.siteName.fill(siteName),
-      await this.page.getByRole("option", { name: `${siteName}` }).click());
+      await this.page.getByRole("option", { name: `${siteName}`, exact: true }).click());
     await expect(
-      this.page.locator("input[value='QA Test Site']").first(),
+      this.page.locator(`input[value='${siteName}']`).first()
     ).toBeVisible();
   }
 }

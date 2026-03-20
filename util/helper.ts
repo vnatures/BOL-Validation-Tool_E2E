@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { ENV } from "../config/env";
 
 type Params = {
   request: any; // Playwright's request context passed in by caller
@@ -8,7 +9,7 @@ type Params = {
   filePaths: string[]; // one or many local paths
   note?: string; // visible on BOL details page
   contentType?: string; // optional - defaults to "image/png"
-  apiBase?: string; // optional - defaults to process.env.DOCUMENT_PROCESSING_API
+  apiBase?: string; // optional - defaults to process.env.DOCUMENT_PROCESSING_API (changed to ENV.documentProcessingAPI)
 };
 
 export async function uploadDocumentImages({
@@ -18,7 +19,7 @@ export async function uploadDocumentImages({
   filePaths,
   note = "Automated upload",
   contentType,
-  apiBase = process.env.DOCUMENT_PROCESSING_API,
+  apiBase = ENV.documentProcessingAPI,
 }: Params) {
   if (!apiBase) throw new Error("DOCUMENT_PROCESSING_API env var not set");
   if (!filePaths?.length)
@@ -98,7 +99,7 @@ export async function deleteBolDocument(
   siteId: number,
   bolId: any,
   deletedBy: number,
-  apiBase: any = process.env.DOCUMENT_PROCESSING_API,
+  apiBase: any = ENV.documentProcessingAPI,
 ) {
   if (!apiBase) throw new Error("DOCUMENT_PROCESSING_API env var not set");
   if (!siteId) throw new Error("siteId is required");

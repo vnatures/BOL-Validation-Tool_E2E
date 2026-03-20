@@ -1,11 +1,12 @@
 import { chromium, FullConfig, expect } from "@playwright/test";
 import fs from "fs/promises";
+import { ENV } from "./config/env";
 
 const users = [
   {
-    name: "Maria",
-    username: process.env.APP_USERNAME!,
-    pass: process.env.APP_PASSWORD!,
+    name: "testUser",
+    username: ENV.username!,
+    pass: ENV.password!,
   },
 ];
 
@@ -17,7 +18,7 @@ async function globalSetup(_config: FullConfig) {
     const context = await browser.newContext();
     const page = await context.newPage();
 
-    await page.goto(process.env.BASE_URL!);
+    await page.goto(ENV.baseUrl!);
     await page.getByRole("textbox", { name: "Username" }).fill(u.username);
     await page.getByRole("textbox", { name: "Password" }).fill(u.pass);
     await page.getByRole("button", { name: "Sign in" }).click();
